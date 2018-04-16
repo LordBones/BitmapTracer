@@ -1,0 +1,8 @@
+/BitmapTracer.Core/bin
+/BitmapTracer.Core/obj
+/BitmapTracer.CoreTests/bin
+/BitmapTracer.CoreTests/obj
+/BitmapTracer/bin
+/BitmapTracer/obj
+/*.suo
+/.vs/

@@ -1,0 +1,51 @@
+﻿<Window x:Class="BitmapTracer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="700" Width="1024">
+    <Grid Background="Gray">
+        <DockPanel>
+            
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="White" >
+                <Menu HorizontalAlignment="Left"  Margin="0,10,0,0" VerticalAlignment="Top" >
+                    <MenuItem Header="Open" Click="MenuItem_Click" >
+
+                    </MenuItem>
+
+                </Menu>
+
+                <Button Margin="10,0,0,0" Click="Button_Click_2" >Original</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click" >Transformation</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click_1" >Trace</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click_3" >TraceOld</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click_4" ToolTip="ColorReduction" >CR</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click_41" >CRBetter</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click_42" >TraceCRBetter</Button>
+                <Button Margin="10,0,0,0" Click="Button_Click_NewBlend" >TraceCRBetter</Button>
+
+
+                <Label >Number</Label>
+                <TextBox Name="NumberInput" Text="0" Width="50" ></TextBox>
+                <Label >Progress mode</Label>
+                <CheckBox Margin="10 10 10 10" Name="CheckProgresMode" ToolTip="Jeli zapnut vstupem do funkce je predchazejici vygenerovany obrazek"></CheckBox>
+                <Label >Save To SVG</Label>
+                <CheckBox Margin="10 10 10 10" Name="CheckSaveToSVG" ToolTip="kazda konverze uklada vysledek redukce do svg"></CheckBox>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="White" Height="40"   >
+                <TextBlock VerticalAlignment="Center" >Nova verze: </TextBlock>
+                <Button Margin="10,5,0,5" Click="TraceNew_Click_1" >Trace</Button>
+                <Button Margin="10,5,0,5" Click="TraceNew_Click_2" >OldCompare</Button>
+                <Button Margin="10,5,0,5" Click="ColorToCSV_Click" >pixelsToCsv</Button>
+                <Button Margin="10,5,0,5" Click="DirectionToFile_Click" >DirectionToFile</Button>
+
+            </StackPanel>
+            <Grid >
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Image Name="ImageCanvas" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor" ></Image>
+                </ScrollViewer>
+            </Grid>
+        </DockPanel>
+        
+
+    </Grid>
+</Window>
