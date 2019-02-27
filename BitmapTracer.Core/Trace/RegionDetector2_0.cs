@@ -17,10 +17,13 @@ namespace BitmapTracer.Core.Trace
         private List<RegionVO> _listRegion;
 
         public int TotalRegions { get { return _listRegion.Count; } }
+        public List<RegionVO> Regions { get { return this._listRegion; } }
 
         private RegionManipulator _regionManipulator = null;
         private CanvasPixel _canvasPixel;
         private CanvasPixel _canvasPixelOriginal;
+
+        public RegionManipulator RegionManipulator { get { return _regionManipulator; } }
 
         private int CONST_maxCountPixelForRemove = 10;
          

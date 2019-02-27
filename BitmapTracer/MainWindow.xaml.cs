@@ -53,8 +53,7 @@ namespace BitmapTracer
             Helper_SetAppTitle(string.Empty);
             ShowImage(false);
 
-            VectorPreview window = new VectorPreview();
-            window.Show();
+           
         }
 
      
@@ -442,6 +441,11 @@ namespace BitmapTracer
             // cp.TransformFromInterleaveRGB();
 
             _lastImage = CanvasPixel.CreateBitmpaFromCanvas(cp);
+
+            VectorPreview window = new VectorPreview();
+            
+            window.RenderPolygons(rd.Regions, rd.RegionManipulator);
+            window.Show();
 
             performanceCounter.Stop();
 

@@ -314,6 +314,11 @@ namespace BitmapTracer.Core.basic
         {
             return ((Pixel)obj).Int - this.Int;
         }
+
+        public string ToString()
+        {
+            return $"{this.CA,3},{this.CR,3},{this.CG,3},{this.CB,3}";
+        }
     }
 
    

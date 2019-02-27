@@ -7,9 +7,11 @@ using System.Windows;
 
 namespace BitmapTracer.Core.Trace
 {
-    class RegionToPolygonBO
+    public class RegionToPolygonBO
     {
         private RegionManipulator _regionManipulator;
+
+        enum EnumAxis { None, X, Y , Both}
 
         public RegionToPolygonBO(RegionManipulator regionManipulator)
         {
@@ -42,7 +44,7 @@ namespace BitmapTracer.Core.Trace
 
             result.AddRange(edgePixelInOrder.Select(x => _regionManipulator.Get_PointFromIndex(x)));
 
-           // result = ReduceToEdgePoints_WhenChangeDirection(result);
+            result = ReduceToEdgePoints_WhenChangeDirection(result);
             return result.ToArray();
         }
 
@@ -75,12 +77,40 @@ namespace BitmapTracer.Core.Trace
             
             for (int i = 2;i<points.Count;i++)
             {
-                int sameAxis = Helper_GetPointTheSameAxis(points[i - 2], points[i - 1]);
-                int sameAxis2 = Helper_GetPointTheSameAxis(points[i -1], points[i ]);
+                Point p1 = points[i - 2];
+                Point p2 = points[i - 1];
+                Point p3 = points[i ];
+
+
+                EnumAxis sameAxis = Helper_GetPointTheSameAxis(p1, p2);
+                EnumAxis sameAxis2 = Helper_GetPointTheSameAxis(p2, p3);
 
                 if(sameAxis != sameAxis2)
                 {
-                    result.Add(points[i-1]);
+                    result.Add(p1);
+                }
+                // axis are the same, must detect line
+                else
+                {
+                    EnumAxis sameAxis3 =  Helper_GetPointTheSameAxis(p1, p2, p3);
+                    if (sameAxis3 == EnumAxis.Y)
+                    {
+                        bool xTest = !((p1.X < p2.X && p2.X < p3.X) || (p1.X > p2.X && p2.X > p3.X));
+
+                        if (xTest )
+                        {
+                            result.Add(p2);
+                        }
+                    }
+                    else if (sameAxis3 == EnumAxis.X)
+                    {
+                        bool yTest = !((p1.Y < p2.Y && p2.Y < p3.Y) || (p1.Y > p2.Y && p2.Y > p3.Y));
+
+                        if ( yTest)
+                        {
+                            result.Add(p2);
+                        }
+                    }
                 }
             }
 
@@ -89,14 +119,33 @@ namespace BitmapTracer.Core.Trace
             return result;
         }
 
-        private int Helper_GetPointTheSameAxis(Point p1, Point p2)
+        private EnumAxis Helper_GetPointTheSameAxis(Point p1, Point p2)
         {
-            int result = 0;
-            if (p1.X == p2.X) result += 1;
-            if (p1.Y == p2.Y) result += 2;
+            
+            bool xCompare = p1.X == p2.X;
+            bool yCompare = p1.Y == p2.Y;
 
-            return result;
+            if (xCompare && yCompare) return EnumAxis.Both;
+            if (xCompare) return EnumAxis.X;
+            if (yCompare) return EnumAxis.Y;
+
+            return EnumAxis.None;
         }
+
+        private EnumAxis Helper_GetPointTheSameAxis(Point p1, Point p2, Point p3)
+        {
+            bool xCompare = p1.X == p2.X && p2.X == p3.X;
+            bool yCompare = p1.Y == p2.Y && p2.Y == p3.Y;
+
+            if (xCompare && yCompare) return EnumAxis.Both;
+            if (xCompare) return EnumAxis.X;
+            if (yCompare) return EnumAxis.Y;
+
+            return EnumAxis.None;
+        }
+
+
+
 
 
     }

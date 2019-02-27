@@ -207,7 +207,7 @@ namespace BitmapTracer.Core.Trace
 
         public int Helper_GetPixelIndex_Right(int index)
         {
-            if ((index+1) % this._widthPixels == this._widthPixels ) return -1;
+            if ((index+1) % this._widthPixels == 0 ) return -1;
 
             return index + 1;
         }
@@ -336,8 +336,76 @@ namespace BitmapTracer.Core.Trace
 
         }
 
+        public short Get_X(int pixelIndex)
+        {
+            return (short)(pixelIndex % _widthPixels);
+        }
+
+        public short Get_Y(int pixelIndex)
+        {
+            return (short)(pixelIndex / _widthPixels);
+        }
+
+        public (short X, short Y) Get_XY(int pixelIndex)
+        {
+            return (Get_X(pixelIndex), Get_Y(pixelIndex));
+        }
 
 
+
+        public RectangleArea GetDimensionArea(RegionVO region)
+        {
+            RectangleArea result = new RectangleArea(short.MaxValue,short.MaxValue,short.MinValue, short.MinValue) ;
+
+            for (int i =0;i < region.Pixels.Length; i++)
+            {
+                int pixelIndex = region.Pixels[i];
+                var (x, y) = Get_XY(pixelIndex);
+
+                if (result.X > x) result.X = x;
+                if (result.X2 < x) result.X2 = x;
+                if (result.Y > y) result.Y = y;
+                if (result.Y2 < y) result.Y2 = y;
+
+            }
+
+            return result;
+        }
+
+        public RegionVO[] GetOrderedForRendering(RegionVO [] regions)
+        {
+            List<(RectangleArea area, RegionVO region)> regionsForOrdering = PrepareForOrdering(regions);
+
+            regionsForOrdering.Sort(CompareRegionInsideRegion);
+            return regionsForOrdering.Select(x => x.region).ToArray();
+        }
+
+        private int CompareRegionInsideRegion((RectangleArea area, RegionVO region) region, (RectangleArea area, RegionVO region) region2)
+        {
+            if (IsInsideRange(region.area.X, region.area.X2, region2.area.X) &&
+                IsInsideRange(region.area.X, region.area.X2, region2.area.X2) &&
+                IsInsideRange(region.area.Y, region.area.Y2, region2.area.Y) &&
+                IsInsideRange(region.area.Y, region.area.Y2, region2.area.Y2))
+                return 1;
+
+            if (IsInsideRange(region2.area.X, region2.area.X2, region.area.X) &&
+                IsInsideRange(region2.area.X, region2.area.X2, region.area.X2) &&
+                IsInsideRange(region2.area.Y, region2.area.Y2, region.area.Y) &&
+                IsInsideRange(region2.area.Y, region2.area.Y2, region.area.Y2))
+                return -1;
+
+            return 0;
+        }
+        
+        private bool IsInsideRange(short rangeFrom , short rangeTo, short value)
+        {
+            return (rangeFrom < value && rangeTo > value);
+        }
+
+        private List<(RectangleArea,RegionVO)> PrepareForOrdering(RegionVO [] regions)
+        {
+            return regions.Select(x => (area: GetDimensionArea(x), region: x)).ToList();
+        }
 
         
         

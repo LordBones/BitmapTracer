@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -80,9 +81,9 @@ namespace BitmapTracer.Core.Trace
         {
             _output.WriteLine("<?xml version=\"1.0\" standalone=\"no\"?>");
             _output.WriteLine("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
-           
 
-            _output.WriteLine($"<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"{height}\" width=\"{width}\" style=\"shape-rendering:crispEdges;\">");
+            double zoom = 1024 / (double)width;
+            _output.WriteLine($"<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"  width=\"1024\" height=\"auto\" viewbox=\"0,0,{width},{height}\" style=\"shape-rendering:crispEdges;zoom:{zoom.ToString(CultureInfo.InvariantCulture)}\">");
 
             
 
@@ -99,15 +100,23 @@ namespace BitmapTracer.Core.Trace
         private static string Helper_CreateSVGPolyLine(Point [] points, Pixel color)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("<polyline points=\"");
+            sb.Append("<polygon points=\"");
 
             for(int i = 0;i<points.Length;i++)
             {
                 sb.Append($@"{points[i].X},{points[i].Y} ");
             }
 
+            if(points.Length > 0)
+            {
+                if(points[0] != points[points.Length - 1])
+                {
+                    sb.Append($@"{points[0].X},{points[0].Y} ");
+                }
+            }
+
             sb.Append($@"""  style = """);
-            sb.Append($@"fill:rgb({color.CR},{color.CG},{color.CB});stroke:rgb({color.CR},{color.CG},{color.CB});stroke-width:2""/>");
+            sb.Append($@"fill:rgb({color.CR},{color.CG},{color.CB});stroke:rgb({color.CR},{color.CG},{color.CB});stroke-width:1""/>");
 
             return sb.ToString();
         }

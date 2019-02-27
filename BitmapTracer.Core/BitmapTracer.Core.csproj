@@ -59,6 +59,7 @@
     <Compile Include="basic\ObjectRecyclerTS.cs" />
     <Compile Include="basic\Pixel.cs" />
     <Compile Include="basic\PixelMedian.cs" />
+    <Compile Include="basic\RectangleArea.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="EdgeDetector\CanvasEdgeVO.cs" />
     <Compile Include="EdgeDetector\EdgeDetector.cs" />
@@ -79,7 +80,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" />
+      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
