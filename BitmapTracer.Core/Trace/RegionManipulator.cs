@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using BitmapTracer.Core.basic;
+using BitmapTracer.Core.Helpers;
 
 namespace BitmapTracer.Core.Trace
 {
@@ -382,20 +383,32 @@ namespace BitmapTracer.Core.Trace
 
         private int CompareRegionInsideRegion((RectangleArea area, RegionVO region) region, (RectangleArea area, RegionVO region) region2)
         {
-            if (IsInsideRange(region.area.X, region.area.X2, region2.area.X) &&
-                IsInsideRange(region.area.X, region.area.X2, region2.area.X2) &&
-                IsInsideRange(region.area.Y, region.area.Y2, region2.area.Y) &&
-                IsInsideRange(region.area.Y, region.area.Y2, region2.area.Y2))
-                return 1;
 
-            if (IsInsideRange(region2.area.X, region2.area.X2, region.area.X) &&
-                IsInsideRange(region2.area.X, region2.area.X2, region.area.X2) &&
-                IsInsideRange(region2.area.Y, region2.area.Y2, region.area.Y) &&
-                IsInsideRange(region2.area.Y, region2.area.Y2, region.area.Y2))
-                return -1;
+            int areaSize = BasicHelpers.FastAbs(region.area.X - region.area.X2) *
+                BasicHelpers.FastAbs(region.area.Y - region.area.Y2);
 
-            return 0;
+            int areaSize2 = BasicHelpers.FastAbs(region2.area.X - region2.area.X2) *
+               BasicHelpers.FastAbs(region2.area.Y - region2.area.Y2);
+
+            return areaSize2 - areaSize;
         }
+
+        //private int CompareRegionInsideRegion((RectangleArea area, RegionVO region) region, (RectangleArea area, RegionVO region) region2)
+        //{
+        //    if (IsInsideRange(region.area.X, region.area.X2, region2.area.X) &&
+        //        IsInsideRange(region.area.X, region.area.X2, region2.area.X2) &&
+        //        IsInsideRange(region.area.Y, region.area.Y2, region2.area.Y) &&
+        //        IsInsideRange(region.area.Y, region.area.Y2, region2.area.Y2))
+        //        return 1;
+
+        //    if (IsInsideRange(region2.area.X, region2.area.X2, region.area.X) &&
+        //        IsInsideRange(region2.area.X, region2.area.X2, region.area.X2) &&
+        //        IsInsideRange(region2.area.Y, region2.area.Y2, region.area.Y) &&
+        //        IsInsideRange(region2.area.Y, region2.area.Y2, region.area.Y2))
+        //        return -1;
+
+        //    return 0;
+        //}
         
         private bool IsInsideRange(short rangeFrom , short rangeTo, short value)
         {

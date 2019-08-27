@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BitmapTracer.Core.EdgeDetector;
+using BitmapTracer.Core.ColorToGrey;
 
 namespace BitmapTracer
 {
@@ -77,6 +78,27 @@ namespace BitmapTracer
 
 
         }
+
+        private void MenuSave_Click(object sender, RoutedEventArgs e)
+        {
+            var ofd = new Microsoft.Win32.SaveFileDialog() { Filter = "*.*|*.*|PNG Files (*.png)|*.png" };
+            var result = ofd.ShowDialog();
+            if (result == false) return;
+
+            string fileForSave = ofd.FileName;
+
+            BitmapSource bitmapSource = CanvasARGB.CreateBitmpaFromCanvas(_currentImage);
+
+            FileStream stream = new FileStream(fileForSave, FileMode.Create);
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Interlace = PngInterlaceOption.On;
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+            encoder.Save(stream);
+            stream.Dispose();
+        }
+
+
+        
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -443,7 +465,9 @@ namespace BitmapTracer
             _lastImage = CanvasPixel.CreateBitmpaFromCanvas(cp);
 
             VectorPreview window = new VectorPreview();
-            
+
+            //window.RenderLines( tmpCanvasPixel,cp);
+
             window.RenderPolygons(rd.Regions, rd.RegionManipulator);
             window.Show();
 
@@ -570,6 +594,40 @@ namespace BitmapTracer
 
 
         }
+
+        
+
+            private void CollorToGray_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentImage == null) return;
+
+            int inputNumber = int.Parse(NumberInput.Text);
+
+            Stopwatch performanceCounter = new Stopwatch();
+            performanceCounter.Start();
+
+            CanvasARGB canvas = Get_ProgressOrOrigInput();
+            CanvasPixel canvasPixel = CanvasPixel.CreateBitmpaFromCanvas(canvas);
+
+            ColorToGrey ctg = new ColorToGrey();
+
+            Array2D matrix = ctg.CreateColloredMatrix(canvasPixel.Width, canvasPixel.Height, inputNumber);
+
+            CanvasPixel resultCanvas = ctg.CreateColoredGreyScale(canvasPixel, matrix);
+
+         
+
+            _lastImage = CanvasPixel.CreateBitmpaFromCanvas(resultCanvas);
+
+
+
+            performanceCounter.Stop();
+
+            Helper_SetAppTitle(string.Format("{0,000} s ", performanceCounter.Elapsed.TotalSeconds));
+
+            ShowImage(false);
+        }
+
 
         private void DirectionToFile_Click(object sender, RoutedEventArgs e)
         {

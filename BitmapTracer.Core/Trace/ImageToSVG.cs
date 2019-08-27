@@ -63,16 +63,20 @@ namespace BitmapTracer.Core.Trace
         {
             Write_StartHeader(original.Width, original.Height);
 
+            RegionVO[] regionsOrdered = regMan.GetOrderedForRendering(regions.ToArray());
+
             RegionToPolygonBO regionToPolygon = new RegionToPolygonBO(regMan);
 
-            for (int i = 0; i < regions.Count; i++)
+            for (int i = 0; i < regionsOrdered.Length; i++)
             {
-                RegionVO region = regions[i];
+                RegionVO region = regionsOrdered[i];
 
                 Point[] points = regionToPolygon.ToPolygon(region);
 
                 _output.WriteLine(Helper_CreateSVGPolyLine(points, region.Color));
+               // _output.WriteLine(Helper_CreateSVGPolyGone(points, region.Color));
             }
+
 
             Write_EndHeader();
         }
@@ -97,7 +101,7 @@ namespace BitmapTracer.Core.Trace
 
         }
 
-        private static string Helper_CreateSVGPolyLine(Point [] points, Pixel color)
+        private static string Helper_CreateSVGPolyGone(Point [] points, Pixel color)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("<polygon points=\"");
@@ -116,7 +120,31 @@ namespace BitmapTracer.Core.Trace
             }
 
             sb.Append($@"""  style = """);
-            sb.Append($@"fill:rgb({color.CR},{color.CG},{color.CB});stroke:rgb({color.CR},{color.CG},{color.CB});stroke-width:1""/>");
+            sb.Append($@"stroke-linecap:square;fill:rgb({color.CR},{color.CG},{color.CB});stroke:rgb({color.CR},{color.CG},{color.CB});stroke-width:1""/>");
+
+            return sb.ToString();
+        }
+
+        private static string Helper_CreateSVGPolyLine(Point[] points, Pixel color)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<polyline points=\"");
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                sb.Append($@"{points[i].X},{points[i].Y} ");
+            }
+
+            if (points.Length > 0)
+            {
+                if (points[0] != points[points.Length - 1])
+                {
+                    sb.Append($@"{points[0].X},{points[0].Y} ");
+                }
+            }
+
+            sb.Append($@"""  style = """);
+            sb.Append($@"stroke-linecap:square;stroke:rgb({color.CR},{color.CG},{color.CB});stroke-width:1""/>");
 
             return sb.ToString();
         }

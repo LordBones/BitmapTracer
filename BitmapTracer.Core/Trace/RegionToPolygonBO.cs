@@ -44,7 +44,7 @@ namespace BitmapTracer.Core.Trace
 
             result.AddRange(edgePixelInOrder.Select(x => _regionManipulator.Get_PointFromIndex(x)));
 
-            result = ReduceToEdgePoints_WhenChangeDirection(result);
+            //result = ReduceToEdgePoints_WhenChangeDirection(result);
             return result.ToArray();
         }
 

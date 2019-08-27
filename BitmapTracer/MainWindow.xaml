@@ -10,6 +10,9 @@
                     <MenuItem Header="Open" Click="MenuItem_Click" >
 
                     </MenuItem>
+                    <MenuItem Header="Save" Click="MenuSave_Click" >
+
+                    </MenuItem>
 
                 </Menu>
 
@@ -24,7 +27,7 @@
 
 
                 <Label >Number</Label>
-                <TextBox Name="NumberInput" Text="0" Width="50" ></TextBox>
+                <TextBox Name="NumberInput" Text="32" Width="50" ></TextBox>
                 <Label >Progress mode</Label>
                 <CheckBox Margin="10 10 10 10" Name="CheckProgresMode" ToolTip="Jeli zapnut vstupem do funkce je predchazejici vygenerovany obrazek"></CheckBox>
                 <Label >Save To SVG</Label>
@@ -37,7 +40,7 @@
                 <Button Margin="10,5,0,5" Click="TraceNew_Click_2" >OldCompare</Button>
                 <Button Margin="10,5,0,5" Click="ColorToCSV_Click" >pixelsToCsv</Button>
                 <Button Margin="10,5,0,5" Click="DirectionToFile_Click" >DirectionToFile</Button>
-
+                <Button Margin="10,5,0,5" Click="CollorToGray_Click" >CollorToGray</Button>
             </StackPanel>
             <Grid >
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
